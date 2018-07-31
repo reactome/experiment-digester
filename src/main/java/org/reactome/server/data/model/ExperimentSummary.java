@@ -1,4 +1,4 @@
-package org.reactome.server.model;
+package org.reactome.server.data.model;
 
 import java.net.URL;
 import java.util.Map;

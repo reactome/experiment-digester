@@ -1,4 +1,4 @@
-package org.reactome.server.model;
+package org.reactome.server.data.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 

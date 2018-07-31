@@ -1,7 +1,7 @@
 package org.reactome.server.tools;
 
 import com.martiansoftware.jsap.*;
-import org.reactome.server.model.Experiment;
+import org.reactome.server.data.model.Experiment;
 import org.reactome.server.util.FileUtil;
 import org.reactome.server.util.SerializationUtil;
 import org.slf4j.Logger;

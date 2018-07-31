@@ -1,9 +1,9 @@
-package org.reactome.server.util;
+package org.reactome.server.data;
 
 import org.reactome.server.exception.NotFoundException;
-import org.reactome.server.model.ExperimentSummary;
-import org.reactome.server.model.Experiment;
-import org.reactome.server.tools.Importer;
+import org.reactome.server.data.model.ExperimentSummary;
+import org.reactome.server.data.model.Experiment;
+import org.reactome.server.util.SerializationUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Scope;

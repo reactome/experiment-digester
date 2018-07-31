@@ -4,7 +4,7 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import com.esotericsoftware.kryo.serializers.DefaultSerializers;
-import org.reactome.server.model.Experiment;
+import org.reactome.server.data.model.Experiment;
 
 import java.io.*;
 import java.net.URL;

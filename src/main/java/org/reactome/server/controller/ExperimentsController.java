@@ -1,9 +1,9 @@
 package org.reactome.server.controller;
 
 import org.reactome.server.exception.NotFoundException;
-import org.reactome.server.model.ExperimentSummary;
-import org.reactome.server.model.Experiment;
-import org.reactome.server.util.DataContainer;
+import org.reactome.server.data.model.ExperimentSummary;
+import org.reactome.server.data.model.Experiment;
+import org.reactome.server.data.DataContainer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

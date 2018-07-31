@@ -1,6 +1,6 @@
 package org.reactome.server.tools;
 
-import org.reactome.server.model.Experiment;
+import org.reactome.server.data.model.Experiment;
 
 import java.io.*;
 import java.net.URL;
