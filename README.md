@@ -1,24 +1,59 @@
 [<img src=https://user-images.githubusercontent.com/6883670/31999264-976dfb86-b98a-11e7-9432-0316345a72ea.png height=75 />](https://reactome.org)
 
-# Reactome Report Logger
+# Experiment Digester
 
-## What is the Reactome Report Logger
+## What is the Reactome Experiment Digester
 
-This project is meant to centralise different types of events across different services that require periodic reports.
+This project is meant to import experiments from other resources (e.g. Gene Expression Atlas, Human Protein Atlas) and allow the Reactome PathwayBrowser to use them through an easy API. 
 
-Detaching this feature from other projects allows easy maintenance and the possibility of creating enhanced centralised views for the gathered data.  
+## Installation & Configuration
 
-## Configuration details
+#### Requirements 
+    1. Maven 3.X - [Installation Guide](http://maven.apache.org/install.html)
+    
+#### Git Clone
+```console
+git clone https://ksidiropoulos@bitbucket.org/ksidiropoulos/experiment-digester.git
+cd experiment-digester;
+```
 
-The mail.properties file contains 7 parameters in the mail.properties file, meant to be added in the maven profile.
+#### Produce the experiments binary file
+To import the experiments and produce the experiments binary file, compile and use the importer tool as follows:
 
-* mail.host: the SMTP host
-* mail.port: the SMTP port<br>
-* mail.username: in case the SMTP server requires authentication, it must have the username 
-* mail.password= in case the SMTP server requires authentication, it must have the password
-* mail.enable.auth: security protocol
-* mail.report: the email address where the report is sent
-* mail.report.hostname: the automatic report will ONLY be sent when the project is running in a specific server
+```console
+mvn clean compile
+```
+then create the binary file by using the following line:
 
-Reactome has different servers for curation, development, release and production. This project only sends emails when running in the server which hostname is specified by 'mail.report.hostname'  
+```console
+java -jar target/digester-importer-jar-with-dependencies.jar \
+      -o [pathToBinaryFile] \
+      -e [comma separated list of experiment urls]
+```
+Please note that the pathToBinaryFile refers to the location of the output binary file.
 
+For example: 
+
+```console
+java -jar target/digester-importer-jar-with-dependencies.jar \ 
+      -o /Users/home/experiments.bin \
+      -e https://www.ebi.ac.uk/gxa/experiments-content/E-PROT-3/resources/ExperimentDownloadSupplier.Proteomics/tsv
+```
+
+#### Configuring the service
+Maven Profile is a set of configuration values which can be used to set or override default values of Maven build. Using a build profile, you can customise build for different environments such as Production v/s Development environments. Add the following code-snippet containing all the Reactome properties inside the tag <profiles> into your ~/.m2/settings.xml. Please refer to Maven Profile Guideline if you don't have settings.xml
+```html
+<profile>
+    <id>Experiment-Digester-Local</id>
+    <properties>
+        <!-- Path to the experiments binary file -->
+        <experiments.data.file>[pathToBinaryFile]</experiments.data.file>
+    </properties>
+</profile>
+```
+Please note that the pathToBinaryFile has to point to the same location as mentioned previously (e.g. /Users/home/experiments.bin)
+
+#### Running the Experiment-Digester Service activating ```Experiment-Digester-Local``` profile
+```console
+mvn tomcat7:run -P Experiment-Digester-Local
+```
