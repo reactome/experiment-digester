@@ -1,0 +1,103 @@
+package org.reactome.server.tools;
+
+import com.martiansoftware.jsap.*;
+import org.reactome.server.model.Experiment;
+import org.reactome.server.util.FileUtil;
+import org.reactome.server.util.SerializationUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.*;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.*;
+
+/**
+ * @author Kostas Sidiropoulos <ksidiro@ebi.ac.uk>
+ */
+public class Importer {
+
+    private static final Logger logger = LoggerFactory.getLogger(Importer.class.getName());
+
+    private GXAParser parser;
+    private List<Experiment> allExperiments = new ArrayList<>();
+
+    private Integer experimentId;
+
+    public static void main(String[] args) throws Exception {
+
+        SimpleJSAP jsap = new SimpleJSAP(
+                Importer.class.getName(),
+                "Imports a list of experiments from Expression Atlas",
+                new Parameter[] {
+                        new FlaggedOption( "experiments", JSAP.STRING_PARSER, JSAP.NO_DEFAULT, JSAP.REQUIRED, 'e', "experiments", "The list of experiments (urls) to import, comma separated").setList(true).setListSeparator(',')
+                       ,new FlaggedOption( "output", JSAP.STRING_PARSER, JSAP.NO_DEFAULT, JSAP.REQUIRED, 'o', "output", "The full path of the output binary file")
+
+                }
+        );
+        JSAPResult config = jsap.parse(args);
+        if( jsap.messagePrinted() ) System.exit( 1 );
+
+//        List<String> experiments = Arrays.asList("https://www.ebi.ac.uk/gxa/experiments-content/E-PROT-3/resources/ExperimentDownloadSupplier.Proteomics/tsv",
+//                                                 "https://www.ebi.ac.uk/gxa/experiments-content/E-MTAB-3/resources/ExperimentDownloadSupplier.Proteomics/tsv");
+
+        new Importer().start(config);
+    }
+
+    public void start(JSAPResult config) {
+        List<String>  experimentURLs = Arrays.asList(config.getStringArray("experiments"));
+        File file = new File(config.getString("output"));
+
+        if(FileUtil.validFile(file)) {
+            logger.info(file + " is a valid file name");
+            start(experimentURLs, file);
+        } else {
+            System.exit(1);
+        }
+
+    }
+
+    public void start(List<String> experiments, File file) {
+        this.processAll(experiments, file);
+    }
+
+    private void processAll(List<String> experiments, File file) {
+        logger.info(String.format("Importing %s experiment(s) from GXA", experiments.size()));
+        parser = new GXAParser();
+
+        experimentId = 0;
+        for (String exp : experiments) {
+            try {
+                processSingleExperiment(new URL(exp));
+            } catch (MalformedURLException e) {
+                logger.error(String.format("Import of single experiment failed. Malformed URL: %s", exp));
+                e.printStackTrace();
+            }
+        }
+
+        storeExperiments(file);
+    }
+
+    private void processSingleExperiment(URL target) {
+        logger.info(String.format("Importing %s...", target.toString()));
+        try (InputStream is = target.openConnection().getInputStream();
+             BufferedReader reader = new BufferedReader(new InputStreamReader(is))) {
+            Experiment experiment = parser.createExperiment(++experimentId, reader, target);
+
+            allExperiments.add(experiment);
+        } catch (IOException e) {
+            logger.error(String.format("Import of single experiment failed. Unable to resolve: %s", target.toString()));
+            e.printStackTrace();
+        }
+    }
+
+    private void storeExperiments(File file) {
+        try {
+            SerializationUtil.get().storeExperiment(allExperiments, file);
+            logger.info(String.format(allExperiments.size() + " experiments stored in %s", file.toString()));
+        } catch (FileNotFoundException e) {
+            logger.error(String.format("Import failed. Experiments are not saved properly to " + file.toString()));
+            e.printStackTrace();
+        }
+    }
+}
