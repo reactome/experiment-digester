@@ -1,10 +1,12 @@
 package org.reactome.server.data.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.apache.commons.text.WordUtils;
 
 import java.net.URL;
-import java.util.*;
-import java.util.function.Predicate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 /**
@@ -112,7 +114,7 @@ public class Experiment {
         this.data.add(0, headerRow);
 
         for (int i = 0; i <headerRow.size(); i++) {
-            headerIndex.put(headerRow.get(i), i);
+            headerIndex.put(WordUtils.capitalizeFully(headerRow.get(i)), i);
         }
     }
 

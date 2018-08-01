@@ -10,7 +10,9 @@ import org.slf4j.LoggerFactory;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author Kostas Sidiropoulos <ksidiro@ebi.ac.uk>
@@ -37,9 +39,6 @@ public class Importer {
         );
         JSAPResult config = jsap.parse(args);
         if( jsap.messagePrinted() ) System.exit( 1 );
-
-//        List<String> experiments = Arrays.asList("https://www.ebi.ac.uk/gxa/experiments-content/E-PROT-3/resources/ExperimentDownloadSupplier.Proteomics/tsv",
-//                                                 "https://www.ebi.ac.uk/gxa/experiments-content/E-MTAB-3/resources/ExperimentDownloadSupplier.Proteomics/tsv");
 
         new Importer().start(config);
     }
