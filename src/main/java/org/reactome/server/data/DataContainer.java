@@ -63,7 +63,7 @@ public class DataContainer {
             experiments = SerializationUtil.get().loadExperiment(new File(fileName)).stream()
                     .collect(Collectors.toMap(Experiment::getId, Function.identity(), (a, b) -> a));
 
-            logger.info(String.format("%s experiments loaded successfully", experiments.size()));
+            logger.info(String.format("%s experiment(s) loaded successfully", experiments.size()));
         } catch (FileNotFoundException e) {
             String msg = String.format("%s has not been found. Please check the settings or run the Importer tool again.", fileName);
             logger.error(msg, e);

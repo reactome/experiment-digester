@@ -30,7 +30,6 @@ import javax.servlet.http.HttpServletRequest;
 class GlobalExceptionHandler {
 
     private static final Logger logger = LoggerFactory.getLogger("errorLogger");
-    private static final Logger onlyEmailLogger = LoggerFactory.getLogger("onlyEmailLogger");
 
     //================================================================================
     // NotFound

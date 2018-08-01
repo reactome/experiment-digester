@@ -150,7 +150,7 @@ public class Experiment {
                                          .filter(c -> tissuesIndex.containsValue(c))
                                          .collect(Collectors.toList());
 
-        StringBuilder builder = new StringBuilder();
+        StringBuilder builder = new StringBuilder("#"); // header should start with #
         for (int r = 0; r < data.size() ; r++) { //Rows
 
             List<String> row = data.get(r);
