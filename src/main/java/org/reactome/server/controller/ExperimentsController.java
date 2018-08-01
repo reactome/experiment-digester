@@ -41,23 +41,6 @@ public class ExperimentsController {
         return summaries;
     }
 
-//    @GetMapping(value = "/submit/{id}", produces = "application/json")
-//    @ResponseBody
-//    public Experiment submit(@PathVariable Integer id,
-//                             @RequestParam(name = "included", required = false) List<Integer> includedColumns,
-//                             HttpServletRequest request) {
-//        infoLogger.info("Request for experiment {} - Included columns: {}", id, includedColumns);
-//
-//        Experiment experiment = dataContainer.getExperimentById(id);
-//        if (experiment == null) throw new NotFoundException("No experiment found");
-//
-//        ServletUriComponentsBuilder builder = ServletUriComponentsBuilder.fromCurrentContextPath();
-//        URI newUri = builder.build().toUri();
-//        infoLogger.info(newUri.toString()+"/experiments/sample/" + id );
-//
-//        return experiment;
-//    }
-
     @GetMapping(value = "/{id}/sample", produces = "text/plain")
     @ResponseBody
     public String getSample(@PathVariable Integer id,
@@ -68,5 +51,4 @@ public class ExperimentsController {
         if (experiment == null) throw new NotFoundException("No experiment found");
         return experiment.extractSample(includedColumns);
     }
-
 }
