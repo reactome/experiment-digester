@@ -24,10 +24,7 @@ public class Experiment {
     private Map<String, Integer> tissuesIndex = null;
 
     private List<List<String>> data = null;
-
     private Integer keyColumn = 0;
-
-
 
     public Experiment(Integer id, URL url) {
         this();
