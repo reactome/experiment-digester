@@ -6,7 +6,7 @@
     <artifactId>experiment-digester</artifactId>
     <packaging>war</packaging>
     <version>1.0.0</version>
-    <name>Experiment digester REST API</name>
+    <name>Experiment Digester REST API</name>
     <organization>
         <name>The European Bioinformatics Institute</name>
         <url>http://www.ebi.ac.uk/</url>
@@ -143,7 +143,7 @@
     </repositories>
 
     <build>
-        <finalName>digester</finalName>
+        <finalName>ExperimentDigester</finalName>
         <resources>
             <resource>
                 <directory>src/main/resources</directory>

@@ -26,7 +26,7 @@ mvn clean compile
 then create the binary file by using the following line:
 
 ```console
-java -jar target/digester-importer-jar-with-dependencies.jar \
+java -jar target/digester-importer-jar-with-dependencies.jar
       -o [pathToBinaryFile] \
       -e [comma separated list of experiment urls]
 ```
@@ -35,7 +35,7 @@ Please note that the pathToBinaryFile refers to the location of the output binar
 For example: 
 
 ```console
-java -jar target/digester-importer-jar-with-dependencies.jar \ 
+java -jar target/digester-importer-jar-with-dependencies.jar \
       -o /Users/home/experiments.bin \
       -e https://www.ebi.ac.uk/gxa/experiments-content/E-PROT-3/resources/ExperimentDownloadSupplier.Proteomics/tsv
 ```
@@ -52,6 +52,11 @@ Maven Profile is a set of configuration values which can be used to set or overr
 </profile>
 ```
 Please note that the pathToBinaryFile has to point to the same location as mentioned previously (e.g. /Users/home/experiments.bin)
+
+#### Generating the war file for deployment activating ```Experiment-Digester-Local``` profile
+```console
+mvn clean pachage -P Experiment-Digester-Local
+```
 
 #### Running the Experiment-Digester Service activating ```Experiment-Digester-Local``` profile
 ```console
