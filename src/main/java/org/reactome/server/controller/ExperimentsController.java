@@ -1,9 +1,10 @@
 package org.reactome.server.controller;
 
-import org.reactome.server.exception.NotFoundException;
-import org.reactome.server.data.model.ExperimentSummary;
-import org.reactome.server.data.model.Experiment;
 import org.reactome.server.data.DataContainer;
+import org.reactome.server.data.model.Experiment;
+import org.reactome.server.data.model.ExperimentSummary;
+import org.reactome.server.data.model.SummaryResponse;
+import org.reactome.server.exception.NotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,11 +35,11 @@ public class ExperimentsController {
 
     @GetMapping(value = "/summaries", produces = "application/json")
     @ResponseBody
-    public Collection<ExperimentSummary> getSummaries() {
+    public SummaryResponse getSummaries() {
         infoLogger.info("Request for all experiment summaries");
         Collection<ExperimentSummary> summaries = dataContainer.getAllSummaries();
         if (summaries == null || summaries.isEmpty()) throw new NotFoundException("No experiment summaries found");
-        return summaries;
+        return new SummaryResponse(summaries);
     }
 
     @GetMapping(value = "/{id}/sample", produces = "text/plain")
