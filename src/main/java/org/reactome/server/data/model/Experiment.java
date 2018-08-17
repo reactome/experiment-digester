@@ -108,10 +108,14 @@ public class Experiment {
     }
 
     public void insertHeader(List<String> headerRow) {
+        headerRow = headerRow.stream()
+                             .map(item -> WordUtils.capitalizeFully(item.replaceAll(", ", " - ")))
+                             .collect(Collectors.toList());
+
         this.data.add(0, headerRow);
 
         for (int i = 0; i <headerRow.size(); i++) {
-            headerIndex.put(WordUtils.capitalizeFully(headerRow.get(i)), i);
+            headerIndex.put(headerRow.get(i), i);
         }
     }
 
