@@ -2,6 +2,7 @@ package org.reactome.server.tools;
 
 import com.martiansoftware.jsap.*;
 import org.reactome.server.data.model.Experiment;
+import org.reactome.server.data.model.ExperimentInfo;
 import org.reactome.server.util.FileUtil;
 import org.reactome.server.util.SerializationUtil;
 import org.slf4j.Logger;
@@ -13,6 +14,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Kostas Sidiropoulos <ksidiro@ebi.ac.uk>
@@ -44,30 +46,32 @@ public class Importer {
     }
 
     public void start(JSAPResult config) {
-        List<String>  experimentURLs = Arrays.asList(config.getStringArray("experiments"));
+        List<ExperimentInfo> experiments = Arrays.asList(config.getStringArray("experiments")).stream()
+                                                                                                 .map(entry -> ExperimentInfo.createExperimentInfo(entry))
+                                                                                                 .collect(Collectors.toList());
         File file = new File(config.getString("output"));
 
         if(FileUtil.validFile(file)) {
             logger.info(file + " is a valid file name");
-            start(experimentURLs, file);
+            start(experiments, file);
         } else {
             System.exit(1);
         }
 
     }
 
-    public void start(List<String> experiments, File file) {
+    public void start(List<ExperimentInfo> experiments, File file) {
         this.processAll(experiments, file);
     }
 
-    private void processAll(List<String> experiments, File file) {
+    private void processAll(List<ExperimentInfo> experiments, File file) {
         logger.info(String.format("Importing %s experiment(s) from GXA", experiments.size()));
         parser = new GXAParser();
 
         experimentId = 0;
-        for (String exp : experiments) {
+        for (ExperimentInfo exp : experiments) {
             try {
-                processSingleExperiment(new URL(exp));
+                processSingleExperiment(exp.getName(), new URL(exp.getUrl()));
             } catch (MalformedURLException e) {
                 logger.error(String.format("Import of single experiment failed. Malformed URL: %s", exp));
                 e.printStackTrace();
@@ -77,11 +81,11 @@ public class Importer {
         storeExperiments(file);
     }
 
-    private void processSingleExperiment(URL target) {
-        logger.info(String.format("Importing %s...", target.toString()));
+    private void processSingleExperiment(String name, URL target) {
+        logger.info(String.format("Importing %s...", (name==null || name.isEmpty()) ? target.toString() : "[" + name + "] " + target.toString()));
         try (InputStream is = target.openConnection().getInputStream();
              BufferedReader reader = new BufferedReader(new InputStreamReader(is))) {
-            Experiment experiment = parser.createExperiment(++experimentId, reader, target);
+            Experiment experiment = parser.createExperiment(++experimentId, reader, name, target);
 
             allExperiments.add(experiment);
         } catch (IOException e) {

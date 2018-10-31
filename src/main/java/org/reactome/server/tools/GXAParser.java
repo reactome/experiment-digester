@@ -2,9 +2,10 @@ package org.reactome.server.tools;
 
 import org.reactome.server.data.model.Experiment;
 
-import java.io.*;
+import java.io.BufferedReader;
 import java.net.URL;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -26,17 +27,17 @@ public class GXAParser {
     private boolean headerFound = false;
     private Experiment experiment = null;
 
-    public Experiment createExperiment(Integer id, BufferedReader reader, URL target) {
+    public Experiment createExperiment(Integer id, BufferedReader reader, String name, URL target) {
         if(reader == null) throw new IllegalArgumentException();
 
         cursor = 0;
         headerFound = false;
-        experiment = new Experiment(id, target);
+        experiment = new Experiment(id, target, name); // Name defined by user
 
         reader.lines().forEach(this::readLine);
 
         experiment.setKeyColumn("Gene Name"); // The second column is the primary column of the sample
-        experiment.setTissuesIndex(Arrays.asList("Gene ID",  "Gene Name"));
+        experiment.setTissuesIndex(Arrays.asList("gene id",  "gene name"));
         return experiment;
     }
 
@@ -56,7 +57,7 @@ public class GXAParser {
             experiment.setDescription(line.substring(QUERY_PREFIX.length()).trim());
 
             Matcher matcher = queryPattern.matcher(line);
-            if(matcher.find()) {
+            if(matcher.find() && experiment.getName() == null) { //If name has not been set by the user
                 experiment.setName(matcher.group(1));
             }
         } else if(line.startsWith(TIMESTAMP_PREFIX)) {  // Get timestamp
@@ -75,10 +76,10 @@ public class GXAParser {
         } else {
             // Fill empty values with 0
             row = row.stream()
-                     .map(v -> (v == null || v.isEmpty()) ? "0" : v)
+                     .map(v -> (v == null || v.isEmpty()) ? "0.0" : v)
                      .collect(Collectors.toList());
 
-            experiment.insertData(row);
+            experiment.insertDataRow(row);
         }
     }
 

@@ -20,16 +20,17 @@ public class Experiment {
     private URL url;
     private String timestamp;
 
-    private Map<String, Integer> headerIndex = null;
-    private Map<String, Integer> tissuesIndex = null;
+    private Map<String, Integer> headerIndex;
+    private Map<String, Integer> tissuesIndex;
 
-    private List<List<String>> data = null;
+    private List<List<String>> data;
     private Integer keyColumn = 0;
 
-    public Experiment(Integer id, URL url) {
+    public Experiment(Integer id, URL url, String definedName) {
         this();
         this.url = url;
         this.id = id;
+        this.name = definedName;
     }
 
     //This is required by Kryo
@@ -103,7 +104,7 @@ public class Experiment {
         return data;
     }
 
-    public void insertData(List<String> row) {
+    public void insertDataRow(List<String> row) {
         this.data.add(row);
     }
 
@@ -137,7 +138,7 @@ public class Experiment {
 
     public void setTissuesIndex(final List<String> filterOutColumns) {
         tissuesIndex = headerIndex.entrySet().stream()
-                                             .filter(entry -> !filterOutColumns.contains(entry.getKey()))
+                                             .filter(entry -> !filterOutColumns.contains(entry.getKey().toLowerCase()))
                                              .sorted(Map.Entry.comparingByKey())
                                              .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (a, b) -> a, TreeMap::new));
     }
