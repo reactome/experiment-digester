@@ -28,7 +28,7 @@ then create the binary file by using the following line:
 ```console
 java -jar target/digester-importer-jar-with-dependencies.jar
       -o [pathToBinaryFile] \
-      -e [comma separated list of experiment urls]
+      -e [comma separated list of experiment urls, optionally with names]
 ```
 Please note that the pathToBinaryFile refers to the location of the output binary file.
 
@@ -37,7 +37,7 @@ For example:
 ```console
 java -jar target/digester-importer-jar-with-dependencies.jar \
       -o /Users/home/experiments.bin \
-      -e https://www.ebi.ac.uk/gxa/experiments-content/E-PROT-3/resources/ExperimentDownloadSupplier.Proteomics/tsv
+      -e [HPA (E-PROT-3)]https://www.ebi.ac.uk/gxa/experiments-content/E-PROT-3/resources/ExperimentDownloadSupplier.Proteomics/tsv
 ```
 
 #### Configuring the service

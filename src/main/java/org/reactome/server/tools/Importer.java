@@ -34,7 +34,7 @@ public class Importer {
                 Importer.class.getName(),
                 "Imports a list of experiments from Expression Atlas",
                 new Parameter[] {
-                        new FlaggedOption( "experiments", JSAP.STRING_PARSER, JSAP.NO_DEFAULT, JSAP.REQUIRED, 'e', "experiments", "The list of experiments (urls) to import, comma separated").setList(true).setListSeparator(',')
+                        new FlaggedOption( "experiments", JSAP.STRING_PARSER, JSAP.NO_DEFAULT, JSAP.REQUIRED, 'e', "experiments", "The list of experiments (urls) to import, comma separated optionally with names").setList(true).setListSeparator(',')
                        ,new FlaggedOption( "output", JSAP.STRING_PARSER, JSAP.NO_DEFAULT, JSAP.REQUIRED, 'o', "output", "The full path of the output binary file")
 
                 }
