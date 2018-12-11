@@ -155,8 +155,17 @@ public class Experiment {
                                          .collect(Collectors.toList());
 
         StringBuilder builder = new StringBuilder("#"); // header should start with #
-        for (int r = 0; r < data.size() ; r++) { //Rows
 
+        //Add header removing the name of the first column and adding the sample name
+        builder.append(getName());
+        List<String> header = data.get(0);
+        builder.append(
+                includedColumns.stream()
+                        .map(c -> header.get(c))
+                        .collect(Collectors.joining("\t", "\t", System.lineSeparator()))
+        );
+
+        for (int r = 1; r < data.size() ; r++) { //Rows
             List<String> row = data.get(r);
             builder.append(
                     includedColumns.stream()
