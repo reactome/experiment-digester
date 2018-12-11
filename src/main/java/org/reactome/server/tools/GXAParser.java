@@ -36,7 +36,7 @@ public class GXAParser {
 
         reader.lines().forEach(this::readLine);
 
-        experiment.setKeyColumn("Gene Name"); // The second column is the primary column of the sample
+        experiment.setKeyColumn("Gene Id"); // The second column is the primary column of the sample
         experiment.setTissuesIndex(Arrays.asList("gene id",  "gene name"));
         return experiment;
     }
