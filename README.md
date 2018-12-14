@@ -55,7 +55,7 @@ Please note that the pathToBinaryFile has to point to the same location as menti
 
 #### Generating the war file for deployment activating ```Experiment-Digester-Local``` profile
 ```console
-mvn clean pachage -P Experiment-Digester-Local
+mvn clean package -P Experiment-Digester-Local
 ```
 
 #### Running the Experiment-Digester Service activating ```Experiment-Digester-Local``` profile
