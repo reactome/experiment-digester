@@ -26,11 +26,13 @@ public class GXAParser {
     private int cursor;
     private boolean headerFound = false;
     private Experiment experiment = null;
+    private Integer ignoredColumns;
 
     public Experiment createExperiment(Integer id, BufferedReader reader, String name, URL target) {
         if(reader == null) throw new IllegalArgumentException();
 
         cursor = 0;
+        ignoredColumns = 0;
         headerFound = false;
         experiment = new Experiment(id, target, name); // Name defined by user
 
@@ -38,6 +40,7 @@ public class GXAParser {
 
         experiment.setKeyColumn("Gene Id"); // The second column is the primary column of the sample
         experiment.setTissuesIndex(Arrays.asList("gene id",  "gene name"));
+        experiment.setIgnoredColumns(ignoredColumns);
         return experiment;
     }
 
@@ -74,12 +77,20 @@ public class GXAParser {
             headerFound = true;
             experiment.insertHeader(row);
         } else {
-            // Fill empty values with 0
-            row = row.stream()
-                     .map(v -> (v == null || v.isEmpty()) ? "0.0" : v)
-                     .collect(Collectors.toList());
-
-            experiment.insertDataRow(row);
+            if (Importer.handleNullValues.equalsIgnoreCase(Importer.OMIT)) {
+                // Ignore lines with empty values
+                if (row.stream().anyMatch(v -> v == null || v.isEmpty())) {
+                    ignoredColumns++;
+                } else {
+                    experiment.insertDataRow(row);
+                }
+            } else {
+                // Fill empty values with 0
+                row = row.stream()
+                        .map(v -> (v == null || v.isEmpty()) ? Importer.handleNullValues : v)
+                        .collect(Collectors.toList());
+                experiment.insertDataRow(row);
+            }
         }
     }
 

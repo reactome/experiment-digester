@@ -25,6 +25,7 @@ public class Experiment {
 
     private List<List<String>> data;
     private Integer keyColumn = 0;
+    private Integer ignoredColumns = 0;
 
     public Experiment(Integer id, URL url, String definedName) {
         this();
@@ -86,6 +87,14 @@ public class Experiment {
 
     public void setTimestamp(String timestamp) {
         this.timestamp = timestamp;
+    }
+
+    public Integer getIgnoredColumns() {
+        return ignoredColumns;
+    }
+
+    public void setIgnoredColumns(Integer ignoredColumns) {
+        this.ignoredColumns = ignoredColumns;
     }
 
     public int getNumberOfColumns() {
