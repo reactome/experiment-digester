@@ -85,7 +85,7 @@ public class GXAParser {
                     experiment.insertDataRow(row);
                 }
             } else {
-                // Fill empty values with 0
+                // Fill empty values with what the user has selected (0 by default)
                 row = row.stream()
                         .map(v -> (v == null || v.isEmpty()) ? Importer.handleNullValues : v)
                         .collect(Collectors.toList());
