@@ -45,11 +45,12 @@ public class ExperimentsController {
     @GetMapping(value = "/{id}/sample", produces = "text/plain")
     @ResponseBody
     public String getSample(@PathVariable Integer id,
+                            @RequestParam(name = "omitNulls", required = false, defaultValue = "false") boolean omitNulls,
                             @RequestParam(name = "included", required = false) List<Integer> includedColumns) {
         infoLogger.info("Request for sample based on experiment {} - Included columns: {}", id, includedColumns);
 
         Experiment experiment = dataContainer.getExperimentById(id);
         if (experiment == null) throw new NotFoundException("No experiment found");
-        return experiment.extractSample(includedColumns);
+        return experiment.extractSample(includedColumns, omitNulls);
     }
 }

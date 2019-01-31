@@ -29,6 +29,7 @@ then create the binary file by using the following line:
 java -jar target/digester-importer-jar-with-dependencies.jar
       -o [pathToBinaryFile] \
       -e [comma separated list of experiment urls, optionally with names]
+      -n [How empty (null) values are handled, e.g "0.0" will replace ane empty value with zeroes]
 ```
 Please note that the pathToBinaryFile refers to the location of the output binary file.
 

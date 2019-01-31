@@ -25,7 +25,9 @@ public class Experiment {
 
     private List<List<String>> data;
     private Integer keyColumn = 0;
-    private Integer ignoredColumns = 0;
+    private Integer ignoredRows = 0;
+
+    private List<String> emptyColumns;
 
     public Experiment(Integer id, URL url, String definedName) {
         this();
@@ -39,6 +41,7 @@ public class Experiment {
         headerIndex = new TreeMap<>();
         tissuesIndex = new TreeMap<>();
         data = new ArrayList<>();
+        emptyColumns = new ArrayList<>();
     }
 
     public Integer getId() {
@@ -89,12 +92,12 @@ public class Experiment {
         this.timestamp = timestamp;
     }
 
-    public Integer getIgnoredColumns() {
-        return ignoredColumns;
+    public Integer getIgnoredRows() {
+        return ignoredRows;
     }
 
-    public void setIgnoredColumns(Integer ignoredColumns) {
-        this.ignoredColumns = ignoredColumns;
+    public void setIgnoredRows(Integer ignoredRows) {
+        this.ignoredRows = ignoredRows;
     }
 
     public int getNumberOfColumns() {
@@ -152,7 +155,39 @@ public class Experiment {
                                              .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (a, b) -> a, TreeMap::new));
     }
 
-    public String extractSample(List<Integer> includedColumns){
+    public List<String> getEmptyColumns() {
+        return emptyColumns;
+    }
+
+    public void setEmptyColumns() {
+        emptyColumns = detectEmptyColumnNames();
+        emptyColumns.forEach(name -> tissuesIndex.remove(name));
+    }
+
+    private List<String> detectEmptyColumnNames() {
+        List<String> toBeRemoved = new ArrayList<>();
+
+        for (String key : headerIndex.keySet()) {
+            Integer columnIndex = headerIndex.get(key);
+            boolean isColumnEmpty = true;
+            for (int rowIndex = 1; rowIndex < data.size(); rowIndex++) {
+                List<String> row = data.get(rowIndex);
+                String value = row.get(columnIndex);
+                if (value != null && !value.isEmpty()) {
+                    isColumnEmpty = false;
+                    break;
+                }
+            }
+
+            if (isColumnEmpty) {
+                toBeRemoved.add(key);
+            }
+        }
+
+        return toBeRemoved;
+    }
+
+    public String extractSample(List<Integer> includedColumns, boolean removeRowsWithEmptyValues){
         if(includedColumns == null || includedColumns.isEmpty()) {
             // In case no columns are specified assume all of them should be included
             includedColumns = new ArrayList<>(tissuesIndex.values());
@@ -176,11 +211,18 @@ public class Experiment {
 
         for (int r = 1; r < data.size() ; r++) { //Rows
             List<String> row = data.get(r);
-            builder.append(
-                    includedColumns.stream()
-                            .map(c -> row.get(c))
-                            .collect(Collectors.joining("\t", row.get(getKeyColumn()) + "\t", System.lineSeparator()))
-            );
+            boolean rowContainsNulls = includedColumns.stream()
+                                                      .map(c -> row.get(c))
+                                                      .anyMatch(v -> v == null || v.isEmpty());
+            if (rowContainsNulls && removeRowsWithEmptyValues) {
+                // Nothing for now
+            } else {
+                builder.append(
+                        includedColumns.stream()
+                                .map(c -> row.get(c))
+                                .collect(Collectors.joining("\t", row.get(getKeyColumn()) + "\t", System.lineSeparator()))
+                );
+            }
         }
 
         return builder.toString();
@@ -198,6 +240,7 @@ public class Experiment {
                 ", columns=" + getNumberOfColumns() +
                 ", rows=" + getNumberOfRows() +
                 ", keyColumn=" + getKeyColumn() +
+                ", emptyColumns=" + emptyColumns +
                 '}';
     }
 }

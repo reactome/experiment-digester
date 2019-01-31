@@ -39,7 +39,7 @@ public class Importer {
                 new Parameter[] {
                          new FlaggedOption( "experiments", JSAP.STRING_PARSER, JSAP.NO_DEFAULT, JSAP.REQUIRED, 'e', "experiments", "The list of experiments (urls) to import, comma separated optionally with names").setList(true).setListSeparator(',')
                        , new FlaggedOption( "output", JSAP.STRING_PARSER, JSAP.NO_DEFAULT, JSAP.REQUIRED, 'o', "output", "The full path of the output binary file")
-                       , new FlaggedOption( "nulls", JSAP.STRING_PARSER, "0.0", JSAP.REQUIRED, 'n', "nulls", "How empty (null) values are handled, e.g \"0.0\" will replace ane empty value with zeroes. \"" + OMIT + "\" will ommit those lines with an empty value.")
+                       , new FlaggedOption( "nulls", JSAP.STRING_PARSER, "", JSAP.REQUIRED, 'n', "nulls", "How empty (null) values are handled, e.g \"0.0\" will replace ane empty value with zeroes. \"" + OMIT + "\" will omit those lines with an empty value.")
 
                 }
         );
@@ -96,8 +96,11 @@ public class Importer {
         try (InputStream is = target.openConnection().getInputStream();
              BufferedReader reader = new BufferedReader(new InputStreamReader(is))) {
             Experiment experiment = parser.createExperiment(++experimentId, reader, name, target);
-            if (experiment.getIgnoredColumns() > 0) {
-                logger.info(">> " + experiment.getIgnoredColumns() + " lines where omitted form the original source!");
+            if (experiment.getIgnoredRows() > 0) {
+                logger.info(">> " + experiment.getIgnoredRows() + " lines where omitted form the original source!");
+            }
+            if (experiment.getEmptyColumns().size() > 0) {
+                logger.info(">> " + experiment.getEmptyColumns().size() + " empty columns where omitted form the original source: " + experiment.getEmptyColumns());
             }
             allExperiments.add(experiment);
         } catch (IOException e) {
