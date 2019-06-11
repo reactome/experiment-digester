@@ -13,7 +13,7 @@ This project is meant to import experiments from other resources (e.g. Gene Expr
     
 #### Git Clone
 ```console
-git clone https://ksidiropoulos@bitbucket.org/ksidiropoulos/experiment-digester.git
+git clone https://github.com/reactome/experiment-digester.git
 cd experiment-digester;
 ```
 
@@ -38,8 +38,9 @@ For example:
 ```console
 java -jar target/digester-importer-jar-with-dependencies.jar \
       -o /Users/home/experiments.bin \
-      -e [HPA (E-PROT-3)]https://www.ebi.ac.uk/gxa/experiments-content/E-PROT-3/resources/ExperimentDownloadSupplier.Proteomics/tsv
+      -e "[HPA (E-PROT-3)]https://www.ebi.ac.uk/gxa/experiments-content/E-PROT-3/resources/ExperimentDownloadSupplier.Proteomics/tsv"
 ```
+The experiments.bin file has to be copied in the corresponding "AnalysisService/digester/" folder
 
 #### Configuring the service
 Maven Profile is a set of configuration values which can be used to set or override default values of Maven build. Using a build profile, you can customise build for different environments such as Production v/s Development environments. Add the following code-snippet containing all the Reactome properties inside the tag <profiles> into your ~/.m2/settings.xml. Please refer to Maven Profile Guideline if you don't have settings.xml
@@ -52,7 +53,7 @@ Maven Profile is a set of configuration values which can be used to set or overr
     </properties>
 </profile>
 ```
-Please note that the pathToBinaryFile has to point to the same location as mentioned previously (e.g. /Users/home/experiments.bin)
+Please note that the pathToBinaryFile has to point to the same location as mentioned previously (e.g. AnalysisService/digester/experiments.bin)
 
 #### Generating the war file for deployment activating ```Experiment-Digester-Local``` profile
 ```console
