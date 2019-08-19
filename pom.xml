@@ -12,6 +12,21 @@
         <url>http://www.ebi.ac.uk/</url>
     </organization>
 
+    <developers>
+        <developer>
+            <id>ksidiro</id>
+            <name>Kostas Sidiropoulos</name>
+            <email>ksidiro@ebi.ac.uk</email>
+            <organization>http://www.ebi.ac.uk/</organization>
+        </developer>
+        <developer>
+            <id>gviteri</id>
+            <name>Guilherme Viteri</name>
+            <email>gviteri@ebi.ac.uk</email>
+            <organization>http://www.ebi.ac.uk/</organization>
+        </developer>
+    </developers>
+
     <properties>
         <deploymentPath>/</deploymentPath>
         <spring.version>5.0.5.RELEASE</spring.version>
