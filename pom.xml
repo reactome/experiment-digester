@@ -30,7 +30,7 @@
     <properties>
         <deploymentPath>/</deploymentPath>
         <spring.version>5.2.3.RELEASE</spring.version>
-        <jackson.version>2.9.10.5</jackson.version>
+        <jackson.version>2.9.10.7</jackson.version>
         <jsap.version>2.1</jsap.version>
         <javax.servlet.version>4.0.0</javax.servlet.version>
         <commons.lang.version>3.7</commons.lang.version>
