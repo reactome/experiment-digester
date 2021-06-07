@@ -1,8 +1,8 @@
 package org.reactome.server.data;
 
-import org.reactome.server.exception.NotFoundException;
-import org.reactome.server.data.model.ExperimentSummary;
 import org.reactome.server.data.model.Experiment;
+import org.reactome.server.data.model.ExperimentSummary;
+import org.reactome.server.exception.NotFoundException;
 import org.reactome.server.util.SerializationUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,7 +42,7 @@ public class DataContainer {
         }
     }
 
-    public Map<Integer,Experiment> getExperiments() {
+    public Map<Integer, Experiment> getExperiments() {
         if (experiments == null) {
             String msg = "Experiments have not been initialized.";
             logger.error(msg, msg);
@@ -58,8 +58,8 @@ public class DataContainer {
 
     public List<ExperimentSummary> getAllSummaries() {
         return getExperiments().values().stream()
-                                        .map(ExperimentSummary::new)
-                                        .collect(Collectors.toList());
+                .map(ExperimentSummary::new)
+                .collect(Collectors.toList());
     }
 
 }

@@ -4,8 +4,8 @@ package org.reactome.server.data.model;
  * @author Kostas Sidiropoulos <ksidiro@ebi.ac.uk>
  */
 public class ExperimentInfo {
-    private String name;
-    private String url;
+    private final String name;
+    private final String url;
 
     private ExperimentInfo(String url) {
         this(null, url);

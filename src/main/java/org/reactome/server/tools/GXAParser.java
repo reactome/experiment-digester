@@ -15,11 +15,11 @@ import java.util.stream.Collectors;
  */
 public class GXAParser {
 
-    private static String METADATA_PREFIX = "#";
-    private static String QUERY_PREFIX = "# Query:";
-    private static String SELECTED_COLUMNS_PREFIX = "# Selected columns:";
-    private static String TIMESTAMP_PREFIX = "# Timestamp:";
-    private static String HEADER_SIGNATURE = "Gene";
+    private static final String METADATA_PREFIX = "#";
+    private static final String QUERY_PREFIX = "# Query:";
+    private static final String SELECTED_COLUMNS_PREFIX = "# Selected columns:";
+    private static final String TIMESTAMP_PREFIX = "# Timestamp:";
+    private static final String HEADER_SIGNATURE = "Gene";
 
     Pattern queryPattern = Pattern.compile("experiment\\s*(.*)");
 
@@ -96,11 +96,9 @@ public class GXAParser {
     }
 
     private boolean isHeader(String line) {
-        boolean rtn = false;
+        boolean rtn = line.contains(HEADER_SIGNATURE);
 
-        if(line.contains(HEADER_SIGNATURE)) { // Assume it is the header line if it contains this string
-            rtn = true;
-        }
+        // Assume it is the header line if it contains this string
         return rtn;
     }
 }

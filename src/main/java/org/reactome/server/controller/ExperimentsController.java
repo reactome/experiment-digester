@@ -33,7 +33,7 @@ public class ExperimentsController {
         return "Experiments loaded " + dataContainer.getExperiments().size();
     }
 
-    @GetMapping(value = "/summaries", produces = "application/json")
+    @GetMapping(value = "/summaries", produces = "application/json;charset=UTF-8")
     @ResponseBody
     public SummaryResponse getSummaries() {
         infoLogger.info("Request for all experiment summaries");
@@ -42,7 +42,7 @@ public class ExperimentsController {
         return new SummaryResponse(summaries);
     }
 
-    @GetMapping(value = "/{id}/sample", produces = "text/plain")
+    @GetMapping(value = "/{id}/sample", produces = "text/plain;charset=UTF-8")
     @ResponseBody
     public String getSample(@PathVariable Integer id,
                             @RequestParam(name = "omitNulls", required = false, defaultValue = "false") boolean omitNulls,
