@@ -6,6 +6,8 @@ import org.reactome.server.data.model.Experiment;
 import org.reactome.server.util.SerializationUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -21,12 +23,23 @@ import java.util.stream.Collectors;
  */
 @Component
 @Scope("singleton")
+@PropertySource(value = {"classpath:digester.properties"})
 public class DataContainer {
     private static final Logger logger = LoggerFactory.getLogger(DataContainer.class.getName());
 
     private Map<Integer, Experiment> experiments;
 
-    public DataContainer() {
+    public DataContainer(@Value("${experiments.data.file}") String fileName) {
+        try {
+            experiments = SerializationUtil.get().loadExperiment(new File(fileName)).stream()
+                    .collect(Collectors.toMap(Experiment::getId, Function.identity()));
+
+            logger.info(String.format("%s experiment(s) loaded successfully", experiments.size()));
+        } catch (FileNotFoundException e) {
+            String msg = String.format("%s has not been found. Please check the settings or run the Importer tool again.", fileName);
+            logger.error(msg, e);
+            System.exit(1);
+        }
     }
 
     public Map<Integer,Experiment> getExperiments() {
@@ -49,25 +62,4 @@ public class DataContainer {
                                         .collect(Collectors.toList());
     }
 
-    /**
-     * Initialise the Experiments data by loading the content of the binary file
-     *
-     * @param fileName the binary file containing the data structures for the analysis
-     */
-    public void setFileName(String fileName) {
-        if (experiments != null) {
-            logger.warn("Attempt to load the content file when previously loaded");
-            return;
-        }
-        try {
-            experiments = SerializationUtil.get().loadExperiment(new File(fileName)).stream()
-                    .collect(Collectors.toMap(Experiment::getId, Function.identity(), (a, b) -> a));
-
-            logger.info(String.format("%s experiment(s) loaded successfully", experiments.size()));
-        } catch (FileNotFoundException e) {
-            String msg = String.format("%s has not been found. Please check the settings or run the Importer tool again.", fileName);
-            logger.error(msg, e);
-            System.exit(1);
-        }
-    }
 }
