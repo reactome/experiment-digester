@@ -13,7 +13,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.4.5</version>
+        <version>2.5.2</version>
     </parent>
 
     <organization>
@@ -37,15 +37,20 @@
     </developers>
 
     <properties>
+        <jdk.version>11</jdk.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <deploymentPath>/</deploymentPath>
+
         <jsap.version>2.1</jsap.version>
         <javax.servlet.version>4.0.1</javax.servlet.version>
-        <commons.text.version>1.6</commons.text.version>
-
-        <maven.war.version>2.6</maven.war.version>
-        <jdk.version>11</jdk.version>
+        <commons.text.version>1.9</commons.text.version>
+        <maven.war.version>3.3.1</maven.war.version>
         <glassfish.version>2.2</glassfish.version>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven-resources-plugin.version>3.2.0</maven-resources-plugin.version>
+        <maven-assembly-plugin.version>3.3.0</maven-assembly-plugin.version>
+        <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
+        <commons-io.version>2.6</commons-io.version>
+        <kryo.version>5.1.1</kryo.version>
     </properties>
 
     <dependencies>
@@ -85,12 +90,6 @@
             <version>${glassfish.version}</version>
             <scope>provided</scope>
         </dependency>
-        <!-- commons-lang3 -->
-<!--        <dependency>-->
-<!--            <groupId>org.apache.commons</groupId>-->
-<!--            <artifactId>commons-lang3</artifactId>-->
-<!--            <version>${commons.lang.version}</version>-->
-<!--        </dependency>-->
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-text</artifactId>
@@ -100,21 +99,13 @@
         <dependency>
             <groupId>com.esotericsoftware</groupId>
             <artifactId>kryo</artifactId>
-            <version>5.0.0-RC1</version>
+            <version>${kryo.version}</version>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/commons-io/commons-io -->
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
-            <version>2.6</version>
+            <version>${commons-io.version}</version>
         </dependency>
-        <!-- Test -->
-<!--        <dependency>-->
-<!--            <groupId>org.junit.jupiter</groupId>-->
-<!--            <artifactId>junit-jupiter-api</artifactId>-->
-<!--            <scope>test</scope>-->
-<!--        </dependency>-->
-
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
@@ -127,7 +118,7 @@
         <repository>
             <id>nexus-ebi-repo</id>
             <name>The EBI internal repository</name>
-            <url>http://www.ebi.ac.uk/Tools/maven/repos/content/groups/ebi-repo/</url>
+            <url>https://www.ebi.ac.uk/Tools/maven/repos/content/groups/ebi-repo/</url>
             <releases>
                 <enabled>true</enabled>
             </releases>
@@ -139,7 +130,7 @@
         <repository>
             <id>nexus-ebi-snapshot-repo</id>
             <name>The EBI internal snapshot repository</name>
-            <url>http://www.ebi.ac.uk/Tools/maven/repos/content/groups/ebi-snapshots/</url>
+            <url>https://www.ebi.ac.uk/Tools/maven/repos/content/groups/ebi-snapshots/</url>
             <releases>
                 <enabled>false</enabled>
             </releases>
@@ -159,18 +150,9 @@
         </resources>
         <plugins>
             <plugin>
-                <groupId>org.apache.tomcat.maven</groupId>
-                <artifactId>tomcat7-maven-plugin</artifactId>
-                <version>2.2</version>
-                <configuration>
-                    <path>${deploymentPath}${project.build.finalName}</path>
-                    <port>5050</port>
-                </configuration>
-            </plugin>
-            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.0</version>
+                <version>${maven-compiler-plugin.version}</version>
                 <configuration>
                     <source>${jdk.version}</source>
                     <target>${jdk.version}</target>
@@ -179,7 +161,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
-                <version>3.0.1</version>
+                <version>${maven-resources-plugin.version}</version>
                 <configuration>
                     <encoding>${project.build.sourceEncoding}</encoding>
                 </configuration>
@@ -188,7 +170,7 @@
             <!-- Generate jar with dependencies -->
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
-                <version>2.6</version>
+                <version>${maven-assembly-plugin.version}</version>
                 <configuration>
                     <finalName>digester-importer</finalName>
                     <archive>
