@@ -7,7 +7,7 @@
     <artifactId>experiment-digester</artifactId>
     <version>1.0.1-SNAPSHOT</version>
 
-    <packaging>war</packaging>
+    <packaging>${packaging}</packaging>
     <name>Experiment Digester REST API</name>
 
     <parent>
@@ -46,6 +46,10 @@
         <jdk.version>11</jdk.version>
         <glassfish.version>2.2</glassfish.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <main.class>org.reactome.server.ExperimentDigesterApplication</main.class>
+        <packaging>war</packaging>
+        <spring.boot.classifier></spring.boot.classifier>
+        <package.name>ExperimentDigester</package.name>
     </properties>
 
     <dependencies>
@@ -85,12 +89,6 @@
             <version>${glassfish.version}</version>
             <scope>provided</scope>
         </dependency>
-        <!-- commons-lang3 -->
-<!--        <dependency>-->
-<!--            <groupId>org.apache.commons</groupId>-->
-<!--            <artifactId>commons-lang3</artifactId>-->
-<!--            <version>${commons.lang.version}</version>-->
-<!--        </dependency>-->
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-text</artifactId>
@@ -108,12 +106,6 @@
             <artifactId>commons-io</artifactId>
             <version>2.6</version>
         </dependency>
-        <!-- Test -->
-<!--        <dependency>-->
-<!--            <groupId>org.junit.jupiter</groupId>-->
-<!--            <artifactId>junit-jupiter-api</artifactId>-->
-<!--            <scope>test</scope>-->
-<!--        </dependency>-->
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -159,15 +151,6 @@
         </resources>
         <plugins>
             <plugin>
-                <groupId>org.apache.tomcat.maven</groupId>
-                <artifactId>tomcat7-maven-plugin</artifactId>
-                <version>2.2</version>
-                <configuration>
-                    <path>${deploymentPath}${project.build.finalName}</path>
-                    <port>5050</port>
-                </configuration>
-            </plugin>
-            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.0</version>
@@ -185,31 +168,36 @@
                 </configuration>
             </plugin>
 
-            <!-- Generate jar with dependencies -->
             <plugin>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <version>2.6</version>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <finalName>digester-importer</finalName>
-                    <archive>
-                        <manifest>
-                            <mainClass>org.reactome.server.tools.Importer</mainClass>
-                        </manifest>
-                    </archive>
-                    <descriptorRefs>
-                        <descriptorRef>jar-with-dependencies</descriptorRef>
-                    </descriptorRefs>
+                    <finalName>${package.name}</finalName>
+                    <fork>true</fork>
+                    <mainClass>${main.class}</mainClass>
+                    <classifier>${spring.boot.classifier}</classifier>
                 </configuration>
                 <executions>
                     <execution>
-                        <id>make-assembly</id>
-                        <phase>compile</phase>
+                        <phase>package</phase>
                         <goals>
-                            <goal>single</goal>
+                            <goal>repackage</goal>
                         </goals>
                     </execution>
                 </executions>
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>importer</id>
+            <properties>
+                <main.class>org.reactome.server.tools.Importer</main.class>
+                <packaging>jar</packaging>
+                <spring.boot.classifier>exec</spring.boot.classifier>
+                <package.name>digester-importer</package.name>
+            </properties>
+        </profile>
+    </profiles>
 </project>
