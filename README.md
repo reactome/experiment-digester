@@ -21,12 +21,12 @@ cd experiment-digester;
 To import the experiments and produce the experiments binary file, compile and use the importer tool as follows:
 
 ```console
-mvn clean compile
+mvn clean package -P importer
 ```
 then create the binary file by using the following line:
 
 ```console
-java -jar target/digester-importer-jar-with-dependencies.jar
+java -jar target/digester-importer-exec.jar
       -o [pathToBinaryFile] \
       -e [comma separated list of experiment urls, optionally with names]
       -n [How empty (null) values are handled, e.g "0.0" will replace an empty value with zeroes]
@@ -36,7 +36,7 @@ Please note that the pathToBinaryFile refers to the location of the output binar
 For example: 
 
 ```console
-java -jar target/digester-importer-jar-with-dependencies.jar \
+java -jar target/digester-importer-exec.jar \
       -o /Users/home/experiments.bin \
       -e "[HPA (E-PROT-3)]https://www.ebi.ac.uk/gxa/experiments-content/E-PROT-3/resources/ExperimentDownloadSupplier.Proteomics/tsv"
 ```
@@ -62,5 +62,5 @@ mvn clean package -P Experiment-Digester-Local
 
 #### Running the Experiment-Digester Service activating ```Experiment-Digester-Local``` profile
 ```console
-mvn tomcat7:run -P Experiment-Digester-Local
+mvn spring-boot:run -P Experiment-Digester-Local
 ```

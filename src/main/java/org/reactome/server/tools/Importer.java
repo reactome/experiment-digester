@@ -25,7 +25,7 @@ public class Importer {
     private static final Logger logger = LoggerFactory.getLogger(Importer.class.getName());
 
     private GXAParser parser;
-    private List<Experiment> allExperiments = new ArrayList<>();
+    private final List<Experiment> allExperiments = new ArrayList<>();
 
     private Integer experimentId;
 
@@ -36,23 +36,23 @@ public class Importer {
         SimpleJSAP jsap = new SimpleJSAP(
                 Importer.class.getName(),
                 "Imports a list of experiments from Expression Atlas",
-                new Parameter[] {
-                         new FlaggedOption( "experiments", JSAP.STRING_PARSER, JSAP.NO_DEFAULT, JSAP.REQUIRED, 'e', "experiments", "The list of experiments (urls) to import, comma separated optionally with names").setList(true).setListSeparator(',')
-                       , new FlaggedOption( "output", JSAP.STRING_PARSER, JSAP.NO_DEFAULT, JSAP.REQUIRED, 'o', "output", "The full path of the output binary file")
-                       , new FlaggedOption( "nulls", JSAP.STRING_PARSER, "", JSAP.REQUIRED, 'n', "nulls", "How empty (null) values are handled, e.g \"0.0\" will replace ane empty value with zeroes. \"" + OMIT + "\" will omit those lines with an empty value.")
+                new Parameter[]{
+                        new FlaggedOption("experiments", JSAP.STRING_PARSER, JSAP.NO_DEFAULT, JSAP.REQUIRED, 'e', "experiments", "The list of experiments (urls) to import, comma separated optionally with names").setList(true).setListSeparator(',')
+                        , new FlaggedOption("output", JSAP.STRING_PARSER, JSAP.NO_DEFAULT, JSAP.REQUIRED, 'o', "output", "The full path of the output binary file")
+                        , new FlaggedOption("nulls", JSAP.STRING_PARSER, "", JSAP.REQUIRED, 'n', "nulls", "How empty (null) values are handled, e.g \"0.0\" will replace ane empty value with zeroes. \"" + OMIT + "\" will omit those lines with an empty value.")
 
                 }
         );
         JSAPResult config = jsap.parse(args);
-        if( jsap.messagePrinted() ) System.exit( 1 );
+        if (jsap.messagePrinted()) System.exit(1);
 
         new Importer().start(config);
     }
 
     public void start(JSAPResult config) {
-        List<ExperimentInfo> experiments = Arrays.asList(config.getStringArray("experiments")).stream()
-                                                                                                 .map(entry -> ExperimentInfo.createExperimentInfo(entry))
-                                                                                                 .collect(Collectors.toList());
+        List<ExperimentInfo> experiments = Arrays.stream(config.getStringArray("experiments"))
+                .map(ExperimentInfo::createExperimentInfo)
+                .collect(Collectors.toList());
         File file = new File(config.getString("output"));
 
         handleNullValues = config.getString("nulls");
@@ -62,7 +62,7 @@ public class Importer {
             logger.info("Empty (null) values will be replaced with \"" + handleNullValues + "\"");
         }
 
-        if(FileUtil.validFile(file)) {
+        if (FileUtil.validFile(file)) {
             logger.info(file + " is a valid file name");
             start(experiments, file);
         } else {
@@ -92,7 +92,7 @@ public class Importer {
     }
 
     private void processSingleExperiment(String name, URL target) {
-        logger.info(String.format("Importing %s...", (name==null || name.isEmpty()) ? target.toString() : "[" + name + "] " + target.toString()));
+        logger.info(String.format("Importing %s...", (name == null || name.isEmpty()) ? target.toString() : "[" + name + "] " + target.toString()));
         try (InputStream is = target.openConnection().getInputStream();
              BufferedReader reader = new BufferedReader(new InputStreamReader(is))) {
             Experiment experiment = parser.createExperiment(++experimentId, reader, name, target);
@@ -104,7 +104,7 @@ public class Importer {
             }
             allExperiments.add(experiment);
         } catch (IOException e) {
-            logger.error(String.format("Import of single experiment failed. Unable to resolve: %s", target.toString()));
+            logger.error(String.format("Import of single experiment failed. Unable to resolve: %s", target));
             e.printStackTrace();
         }
     }
@@ -114,7 +114,7 @@ public class Importer {
             SerializationUtil.get().storeExperiment(allExperiments, file);
             logger.info(String.format(allExperiments.size() + " experiment(s) stored in %s", file.toString()));
         } catch (FileNotFoundException e) {
-            logger.error(String.format("Import failed. Experiments are not saved properly to " + file.toString()));
+            logger.error("Import failed. Experiments are not saved properly to " + file.toString());
             e.printStackTrace();
         }
     }

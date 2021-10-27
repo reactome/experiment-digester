@@ -7,15 +7,15 @@ import java.util.Map;
  * @author Kostas Sidiropoulos <ksidiro@ebi.ac.uk>
  */
 public class ExperimentSummary {
-    private Integer id;
-    private String name;
-    private String description;
-    private String resource;
-    private URL url;
-    private String timestamp;
-    private Integer numberOfGenes;
+    private final Integer id;
+    private final String name;
+    private final String description;
+    private final String resource;
+    private final URL url;
+    private final String timestamp;
+    private final Integer numberOfGenes;
 
-    private Map<String, Integer> tissuesMap;
+    private final Map<String, Integer> tissuesMap;
 
     public ExperimentSummary(Experiment experiment) {
         id = experiment.getId();

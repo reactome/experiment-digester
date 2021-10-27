@@ -20,10 +20,10 @@ public class Experiment {
     private URL url;
     private String timestamp;
 
-    private Map<String, Integer> headerIndex;
+    private final Map<String, Integer> headerIndex;
     private Map<String, Integer> tissuesIndex;
 
-    private List<List<String>> data;
+    private final List<List<String>> data;
     private Integer keyColumn = 0;
     private Integer ignoredRows = 0;
 
@@ -109,7 +109,7 @@ public class Experiment {
     }
 
     public Map<String, Integer> getHeaderIndex() {
-        return  headerIndex;
+        return headerIndex;
     }
 
     public List<List<String>> getData() {
@@ -122,12 +122,12 @@ public class Experiment {
 
     public void insertHeader(List<String> headerRow) {
         headerRow = headerRow.stream()
-                             .map(item -> WordUtils.capitalizeFully(item.replaceAll(", ", " - ")))
-                             .collect(Collectors.toList());
+                .map(item -> WordUtils.capitalizeFully(item.replaceAll(", ", " - ")))
+                .collect(Collectors.toList());
 
         this.data.add(0, headerRow);
 
-        for (int i = 0; i <headerRow.size(); i++) {
+        for (int i = 0; i < headerRow.size(); i++) {
             headerIndex.put(headerRow.get(i), i);
         }
     }
@@ -150,9 +150,9 @@ public class Experiment {
 
     public void setTissuesIndex(final List<String> filterOutColumns) {
         tissuesIndex = headerIndex.entrySet().stream()
-                                             .filter(entry -> !filterOutColumns.contains(entry.getKey().toLowerCase()))
-                                             .sorted(Map.Entry.comparingByKey())
-                                             .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (a, b) -> a, TreeMap::new));
+                .filter(entry -> !filterOutColumns.contains(entry.getKey().toLowerCase()))
+                .sorted(Map.Entry.comparingByKey())
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (a, b) -> a, TreeMap::new));
     }
 
     public List<String> getEmptyColumns() {
@@ -187,16 +187,16 @@ public class Experiment {
         return toBeRemoved;
     }
 
-    public String extractSample(List<Integer> includedColumns, boolean removeRowsWithEmptyValues){
-        if(includedColumns == null || includedColumns.isEmpty()) {
+    public String extractSample(List<Integer> includedColumns, boolean removeRowsWithEmptyValues) {
+        if (includedColumns == null || includedColumns.isEmpty()) {
             // In case no columns are specified assume all of them should be included
             includedColumns = new ArrayList<>(tissuesIndex.values());
         }
         // Prevent duplicates and invalid column indexes
         includedColumns = includedColumns.stream()
-                                         .distinct()
-                                         .filter(c -> tissuesIndex.containsValue(c))
-                                         .collect(Collectors.toList());
+                .distinct()
+                .filter(c -> tissuesIndex.containsValue(c))
+                .collect(Collectors.toList());
 
         StringBuilder builder = new StringBuilder("#"); // header should start with #
 
@@ -205,21 +205,21 @@ public class Experiment {
         List<String> header = data.get(0);
         builder.append(
                 includedColumns.stream()
-                        .map(c -> header.get(c))
+                        .map(header::get)
                         .collect(Collectors.joining("\t", "\t", System.lineSeparator()))
         );
 
-        for (int r = 1; r < data.size() ; r++) { //Rows
+        for (int r = 1; r < data.size(); r++) { //Rows
             List<String> row = data.get(r);
             boolean rowContainsNulls = includedColumns.stream()
-                                                      .map(c -> row.get(c))
-                                                      .anyMatch(v -> v == null || v.isEmpty());
+                    .map(row::get)
+                    .anyMatch(v -> v == null || v.isEmpty());
             if (rowContainsNulls && removeRowsWithEmptyValues) {
                 // Nothing for now
             } else {
                 builder.append(
                         includedColumns.stream()
-                                .map(c -> row.get(c))
+                                .map(row::get)
                                 .collect(Collectors.joining("\t", row.get(getKeyColumn()) + "\t", System.lineSeparator()))
                 );
             }
