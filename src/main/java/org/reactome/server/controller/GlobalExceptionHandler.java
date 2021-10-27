@@ -53,7 +53,7 @@ class GlobalExceptionHandler {
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.add("Content-Type", "application/json");
         try {
-            StringBuffer requestURL = (request == null) ? new StringBuffer("") : request.getRequestURL();
+            StringBuffer requestURL = (request == null) ? new StringBuffer() : request.getRequestURL();
             ObjectMapper mapper = new ObjectMapper();
             return ResponseEntity.status(status)
                     .headers(responseHeaders)
