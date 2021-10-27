@@ -5,7 +5,7 @@
 
     <groupId>org.reactome.server</groupId>
     <artifactId>experiment-digester</artifactId>
-    <version>1.0.1-SNAPSHOT</version>
+    <version>1.0.1</version>
 
     <packaging>${packaging}</packaging>
     <name>Experiment Digester REST API</name>
@@ -57,6 +57,18 @@
         <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
         <maven.war.version>3.3.1</maven.war.version>
     </properties>
+
+    <profiles>
+        <profile>
+            <id>importer</id>
+            <properties>
+                <main.class>org.reactome.server.tools.Importer</main.class>
+                <packaging>jar</packaging>
+                <spring.boot.classifier>exec</spring.boot.classifier>
+                <package.name>digester-importer</package.name>
+            </properties>
+        </profile>
+    </profiles>
 
     <dependencies>
         <dependency>
@@ -111,7 +123,6 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-
     <repositories>
         <!-- EBI repo -->
         <repository>
@@ -138,7 +149,6 @@
             </snapshots>
         </repository>
     </repositories>
-
     <build>
         <finalName>ExperimentDigester</finalName>
         <resources>
@@ -186,16 +196,4 @@
             </plugin>
         </plugins>
     </build>
-
-    <profiles>
-        <profile>
-            <id>importer</id>
-            <properties>
-                <main.class>org.reactome.server.tools.Importer</main.class>
-                <packaging>jar</packaging>
-                <spring.boot.classifier>exec</spring.boot.classifier>
-                <package.name>digester-importer</package.name>
-            </properties>
-        </profile>
-    </profiles>
 </project>
