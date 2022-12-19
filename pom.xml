@@ -5,20 +5,20 @@
 
     <groupId>org.reactome.server</groupId>
     <artifactId>experiment-digester</artifactId>
-    <version>1.0.2</version>
+    <version>1.0.3</version>
 
     <packaging>${packaging}</packaging>
     <name>Experiment Digester REST API</name>
 
     <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.7.1</version>
+        <groupId>org.reactome.server</groupId>
+        <artifactId>reactome-parent</artifactId>
+        <version>1.0.0</version>
     </parent>
 
     <organization>
         <name>The European Bioinformatics Institute</name>
-        <url>http://www.ebi.ac.uk/</url>
+        <url>https://www.ebi.ac.uk/</url>
     </organization>
 
     <developers>
@@ -26,37 +26,24 @@
             <id>ksidiro</id>
             <name>Kostas Sidiropoulos</name>
             <email>ksidiro@ebi.ac.uk</email>
-            <organization>http://www.ebi.ac.uk/</organization>
+            <organization>https://www.ebi.ac.uk/</organization>
         </developer>
         <developer>
             <id>gviteri</id>
             <name>Guilherme Viteri</name>
             <email>gviteri@ebi.ac.uk</email>
-            <organization>http://www.ebi.ac.uk/</organization>
+            <organization>https://www.ebi.ac.uk/</organization>
         </developer>
     </developers>
 
     <properties>
-        <jdk.version>11</jdk.version>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
         <deploymentPath>/</deploymentPath>
-
-        <jsap.version>2.1</jsap.version>
-        <javax.servlet.version>4.0.1</javax.servlet.version>
-        <commons.text.version>1.9</commons.text.version>
-        <glassfish.version>2.2</glassfish.version>
-        <commons-io.version>2.11.0</commons-io.version>
-        <kryo.version>5.3.0</kryo.version>
-        <springdoc-openapi.version>1.6.9</springdoc-openapi.version>
-
         <main.class>org.reactome.server.ExperimentDigesterApplication</main.class>
         <packaging>war</packaging>
         <spring.boot.classifier></spring.boot.classifier>
         <package.name>ExperimentDigester</package.name>
-        <maven-resources-plugin.version>3.2.0</maven-resources-plugin.version>
-        <maven-assembly-plugin.version>3.3.0</maven-assembly-plugin.version>
-        <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
-        <maven.war.version>3.3.1</maven.war.version>
+
     </properties>
 
     <profiles>
@@ -86,37 +73,31 @@
         <dependency>
             <groupId>com.martiansoftware</groupId>
             <artifactId>jsap</artifactId>
-            <version>${jsap.version}</version>
         </dependency>
         <!-- Servlet -->
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
-            <version>${javax.servlet.version}</version>
             <scope>provided</scope>
         </dependency>
         <!-- Avoid: javax.validation.ValidationException: HV000183: Unable to load 'javax.el.ExpressionFactory' -->
         <dependency>
             <groupId>org.glassfish.web</groupId>
             <artifactId>el-impl</artifactId>
-            <version>${glassfish.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-text</artifactId>
-            <version>${commons.text.version}</version>
         </dependency>
         <!-- Kryo -->
         <dependency>
             <groupId>com.esotericsoftware</groupId>
             <artifactId>kryo</artifactId>
-            <version>${kryo.version}</version>
         </dependency>
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
-            <version>${commons-io.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -126,7 +107,6 @@
         <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-ui</artifactId>
-            <version>${springdoc-openapi.version}</version>
         </dependency>
     </dependencies>
     <repositories>
@@ -169,8 +149,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>${maven-compiler-plugin.version}</version>
                 <configuration>
-                    <source>${jdk.version}</source>
-                    <target>${jdk.version}</target>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
                 </configuration>
             </plugin>
             <plugin>
