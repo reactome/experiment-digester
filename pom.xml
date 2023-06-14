@@ -5,7 +5,7 @@
 
     <groupId>org.reactome.server</groupId>
     <artifactId>experiment-digester</artifactId>
-    <version>1.0.5</version>
+    <version>1.0.6</version>
 
     <packaging>${packaging}</packaging>
     <name>Experiment Digester REST API</name>
@@ -13,7 +13,7 @@
     <parent>
         <groupId>org.reactome.maven</groupId>
         <artifactId>reactome-parent</artifactId>
-        <version>1.0.2</version>
+        <version>1.0.3</version>
     </parent>
 
     <organization>
